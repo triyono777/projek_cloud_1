@@ -265,6 +265,13 @@ Username: projek_cloud_1
 Password: secret123
 ```
 
+Data login phpMyAdmin tersebut berasal dari `compose.yaml`:
+
+- `Server: db` berasal dari service database bernama `db` dan setting `PMA_HOST: db` pada service `phpmyadmin`.
+- `Username: projek_cloud_1` berasal dari `MYSQL_USER: ${DB_USERNAME:-projek_cloud_1}` pada service `db`.
+- `Password: secret123` berasal dari `MYSQL_PASSWORD: ${DB_PASSWORD:-secret123}` pada service `db`.
+- `URL: http://localhost:8081` berasal dari port mapping `${PHPMYADMIN_PORT:-8081}:80` pada service `phpmyadmin`.
+
 Catatan:
 
 - Aplikasi Laravel memakai akun `admin@example.com`.

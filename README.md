@@ -63,6 +63,13 @@ Login phpMyAdmin:
 * Username: `projek_cloud_1`
 * Password: `secret123`
 
+Keterangan sumber setting dari `compose.yaml`:
+
+* Server `db` berasal dari nama service database dan `PMA_HOST: db` pada service `phpmyadmin`.
+* Username `projek_cloud_1` berasal dari `MYSQL_USER: ${DB_USERNAME:-projek_cloud_1}`.
+* Password `secret123` berasal dari `MYSQL_PASSWORD: ${DB_PASSWORD:-secret123}`.
+* URL `http://localhost:8081` berasal dari port mapping `${PHPMYADMIN_PORT:-8081}:80`.
+
 Jika ingin menjalankan di background:
 
 ```bash
