@@ -611,12 +611,17 @@ railway variable list --service MySQL --json
 Set ke service aplikasi:
 
 ```bash
-railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-database> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
 ```
 
 Catatan:
 
-- Ganti `<...>` dengan nilai asli dari Railway.
+- Ganti `password-dari-railway` dengan password asli dari variable `MYSQLPASSWORD` di service MySQL Railway.
+- Jika nilai `MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, atau `MYSQLUSER` di Railway berbeda, gunakan nilai asli dari output `railway variable list --service MySQL --json`.
 - Jangan commit secret ke GitHub.
 - Simpan secret hanya di Railway variable.
 

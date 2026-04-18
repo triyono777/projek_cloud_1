@@ -213,8 +213,14 @@ Jika menggunakan `railway up` dari folder lokal dan service aplikasi tidak otoma
 
 ```bash
 railway variable list --service MySQL --json
-railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-db> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
 ```
+
+Ganti `password-dari-railway` dengan nilai asli `MYSQLPASSWORD` dari service MySQL Railway.
 
 ### 5.4 Tambahkan Service Aplikasi
 
@@ -248,8 +254,14 @@ Pastikan service aplikasi juga memiliki variabel MySQL dari service database:
 
 ```bash
 railway variable list --service MySQL --json
-railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-db> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
 ```
+
+Ganti `password-dari-railway` dengan nilai asli `MYSQLPASSWORD` dari service MySQL Railway.
 
 Jika Railway sudah memberi public domain, `docker/start.sh` akan memakai `RAILWAY_PUBLIC_DOMAIN` untuk membuat `APP_URL` otomatis. Jika ingin eksplisit:
 

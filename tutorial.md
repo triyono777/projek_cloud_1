@@ -721,11 +721,16 @@ railway variable set APP_URL=https://projek-cloud-1-production.up.railway.app --
 Jika variable MySQL belum tersedia di service aplikasi, set manual:
 
 ```bash
-railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-database> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
 ```
 
 Penting:
 
+- Ganti `password-dari-railway` dengan password asli dari variable `MYSQLPASSWORD` di service MySQL Railway.
 - Jangan mengetik password asli di file dokumentasi.
 - Jangan commit password production ke GitHub.
 - Simpan secret hanya di Railway variable.
@@ -849,7 +854,11 @@ railway add --service projek-cloud-1
 php artisan key:generate --show
 railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
 railway variable list --service MySQL --json
-railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-database> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
 railway up --service projek-cloud-1 --detach
 railway domain --service projek-cloud-1
 railway logs --service projek-cloud-1
