@@ -266,7 +266,13 @@ railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-clou
 
 Ganti `password-dari-railway` dengan nilai asli `MYSQLPASSWORD` dari service MySQL Railway.
 
-Jika Railway sudah memberi public domain, `docker/start.sh` akan memakai `RAILWAY_PUBLIC_DOMAIN` untuk membuat `APP_URL` otomatis. Jika ingin eksplisit:
+Jika Railway sudah memberi public domain, salin domain dari service aplikasi bagian public networking atau domain URL.
+
+Contoh lokasi domain Railway:
+
+![Lokasi domain URL Railway](image_tutorial/railway_lokasi_domian_url.png)
+
+Set `APP_URL` agar sama dengan domain Railway yang aktif:
 
 ```bash
 railway variable set APP_URL="https://domain-anda.up.railway.app" --service projek-cloud-1
@@ -312,6 +318,12 @@ Setelah domain aktif, cek:
 https://domain-anda.up.railway.app
 https://domain-anda.up.railway.app/up
 https://domain-anda.up.railway.app/health
+```
+
+Setelah domain aktif, update `APP_URL` jika belum sama dengan domain tersebut:
+
+```bash
+railway variable set APP_URL="https://domain-anda.up.railway.app" --service projek-cloud-1
 ```
 
 ## 6. Alur Kerja yang Disarankan

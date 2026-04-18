@@ -718,7 +718,11 @@ Set `APP_KEY`:
 railway variable set APP_KEY="base64:ISI_APP_KEY_ANDA" --service projek-cloud-1
 ```
 
-Set `APP_URL` jika sudah punya domain:
+Set `APP_URL` jika sudah punya domain. Domain bisa dilihat di Railway pada service aplikasi, bagian public networking atau domain URL.
+
+Contoh lokasi domain Railway:
+
+![Lokasi domain URL Railway](image_tutorial/railway_lokasi_domian_url.png)
 
 ```bash
 railway variable set APP_URL="https://projek-cloud-1-production.up.railway.app" --service projek-cloud-1
@@ -821,10 +825,20 @@ Setelah domain dibuat, cek di browser:
 https://domain-anda.up.railway.app
 ```
 
+Lokasi domain di dashboard Railway:
+
+![Lokasi domain URL Railway](image_tutorial/railway_lokasi_domian_url.png)
+
 Untuk project ini:
 
 ```text
 https://projek-cloud-1-production.up.railway.app
+```
+
+Setelah domain benar, set `APP_URL` agar sama dengan domain Railway:
+
+```bash
+railway variable set APP_URL="https://domain-railway-anda.up.railway.app" --service projek-cloud-1
 ```
 
 ### 13.15 Membuka Shell Railway
