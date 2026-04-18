@@ -568,7 +568,7 @@ Project ini memakai `railway.json`:
   },
   "deploy": {
     "startCommand": "start-app",
-    "healthcheckPath": "/health"
+    "healthcheckPath": "/up"
   }
 }
 ```
@@ -577,7 +577,8 @@ Artinya:
 
 - Railway build aplikasi dari `Dockerfile`.
 - Railway menjalankan command `start-app`.
-- Railway mengecek aplikasi lewat `/health`.
+- Railway mengecek container aplikasi lewat `/up`.
+- Endpoint `/health` tetap dipakai manual untuk mengecek aplikasi plus database.
 
 ## 18. Set Environment Variable Railway
 
@@ -674,6 +675,13 @@ Log biasanya menunjukkan error seperti:
 - Health check gagal.
 - Port aplikasi salah.
 
+Jika log deploy menampilkan banyak request ke `/health` lalu muncul `Deploy failed` atau `service unavailable`, berarti project masih memakai health check lama. Ambil update terbaru lalu deploy ulang:
+
+```bash
+git pull
+railway up --service projek-cloud-1
+```
+
 ## 21. Membuat Domain Railway
 
 Buat domain:
@@ -691,12 +699,19 @@ https://projek-cloud-1-production.up.railway.app
 Cek health production:
 
 ```text
+https://projek-cloud-1-production.up.railway.app/up
 https://projek-cloud-1-production.up.railway.app/health
 ```
 
 ## 22. Validasi Setelah Deploy
 
-Cek health dengan `curl`:
+Cek aplikasi hidup dengan `curl`:
+
+```bash
+curl -I https://projek-cloud-1-production.up.railway.app/up
+```
+
+Cek health database dengan `curl`:
 
 ```bash
 curl -sS https://projek-cloud-1-production.up.railway.app/health
@@ -722,6 +737,7 @@ curl -I https://projek-cloud-1-production.up.railway.app/dashboard/posts
 
 Hasil yang benar:
 
+- `/up` mengembalikan HTTP `200`.
 - `/health` menampilkan status `ok`.
 - Database menampilkan status `connected`.
 - `/login` menampilkan HTTP `200`.

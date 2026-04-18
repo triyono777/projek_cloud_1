@@ -28,6 +28,7 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 * `docker/start.sh`: startup script untuk menunggu database dan menjalankan migrasi
 * `railway.json`: konfigurasi build dan deploy Railway
 * `routes/web.php`: route halaman utama dan endpoint `/health`
+* `railway.json`: Railway memakai `/up` untuk health check platform
 
 ## 1. Menjalankan Proyek Secara Lokal
 
@@ -243,6 +244,13 @@ Set variabel aplikasi:
 railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
 ```
 
+Pastikan service aplikasi juga memiliki variabel MySQL dari service database:
+
+```bash
+railway variable list --service MySQL --json
+railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-db> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
+```
+
 Jika Railway sudah memberi public domain, `docker/start.sh` akan memakai `RAILWAY_PUBLIC_DOMAIN` untuk membuat `APP_URL` otomatis. Jika ingin eksplisit:
 
 ```bash
@@ -287,6 +295,7 @@ Setelah domain aktif, cek:
 
 ```text
 https://domain-anda.up.railway.app
+https://domain-anda.up.railway.app/up
 https://domain-anda.up.railway.app/health
 ```
 
@@ -350,19 +359,29 @@ Cek:
 
 ### Health check Railway gagal
 
-Cek endpoint:
+Railway memakai `/up` untuk mengecek apakah container Laravel hidup. Endpoint `/health` dipakai untuk cek aplikasi plus database.
+
+Cek log:
 
 ```bash
 railway logs --service projek-cloud-1
 ```
 
-Jika error database, pastikan MySQL service sudah dibuat dan service aplikasi mendapat variabel MySQL.
+Jika terminal menampilkan `Deploy failed`, `service unavailable`, dan banyak request ke `/health`, ambil update terbaru lalu deploy ulang:
+
+```bash
+git pull
+railway up --service projek-cloud-1
+```
+
+Jika `/up` berhasil tetapi `/health` menunjukkan database `disconnected`, pastikan MySQL service sudah dibuat dan service aplikasi mendapat variabel MySQL.
 
 ## 8. Endpoint yang Tersedia
 
 * `/` menampilkan landing page proyek
 * `/login` menampilkan form login admin
 * `/dashboard/posts` menampilkan dashboard manajemen blog
+* `/up` menampilkan status aplikasi hidup untuk Railway health check
 * `/health` menampilkan JSON status aplikasi dan status koneksi database
 
 ## Referensi
