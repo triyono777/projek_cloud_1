@@ -91,6 +91,14 @@ File penting yang akan sering dipakai:
 - `routes/web.php`: daftar route aplikasi web.
 - `database/seeders/DatabaseSeeder.php`: data awal user admin dan contoh artikel blog.
 
+Folder gambar tutorial:
+
+```text
+image_tutorial/
+```
+
+Gambar di folder tersebut dipakai sebagai panduan visual agar langkah-langkah lebih mudah diikuti saat dibaca di GitHub.
+
 ## 4. Memahami Dockerfile
 
 File `Dockerfile` menjelaskan cara membangun container aplikasi Laravel.
@@ -255,6 +263,10 @@ Jalankan build dan container:
 docker compose up --build
 ```
 
+Setelah perintah berjalan, Docker Desktop akan menampilkan container aplikasi dan database.
+
+![Docker Desktop menampilkan container Laravel dan MySQL](image_tutorial/docker_dekstop.png)
+
 Jika ingin berjalan di background:
 
 ```bash
@@ -266,6 +278,10 @@ Saat container berjalan, buka:
 ```text
 http://localhost:8000
 ```
+
+Tampilan halaman utama web pribadi:
+
+![Halaman utama web pribadi Laravel](image_tutorial/home_page.png)
 
 Cek health endpoint:
 
@@ -348,6 +364,10 @@ Setelah login, buka dashboard:
 http://localhost:8000/dashboard/posts
 ```
 
+Tampilan dashboard admin untuk manajemen blog:
+
+![Dashboard admin manajemen blog](image_tutorial/dashboard_admin.png)
+
 Di dashboard, admin bisa:
 
 - Melihat daftar artikel.
@@ -426,6 +446,14 @@ Langkah daftar Railway:
 4. Berikan izin Railway untuk membaca repository GitHub jika diminta.
 5. Setelah login, Railway dashboard siap digunakan.
 
+Tampilan halaman utama Railway:
+
+![Halaman utama Railway](image_tutorial/railway_homepage.png)
+
+Tampilan halaman login Railway:
+
+![Halaman login Railway](image_tutorial/railway_login.png)
+
 Railway menyediakan project yang berisi satu atau beberapa service.
 
 Contoh service:
@@ -458,6 +486,10 @@ Jika Railway CLI belum terpasang, install dengan npm:
 npm install -g @railway/cli
 ```
 
+Contoh halaman dokumentasi atau instruksi install Railway CLI:
+
+![Panduan install Railway CLI](image_tutorial/railway_install.png)
+
 Cek apakah sudah berhasil:
 
 ```bash
@@ -481,6 +513,10 @@ railway login
 ```
 
 Biasanya Railway akan membuka browser. Ikuti proses login sampai selesai.
+
+Contoh proses login Railway CLI di terminal:
+
+![Login Railway CLI di terminal](image_tutorial/railway_cli_login.png)
 
 Cek akun yang aktif:
 
@@ -557,6 +593,10 @@ Project: projek-cloud-1
 Environment: production
 Service: projek-cloud-1
 ```
+
+Contoh tampilan dashboard project Railway setelah service aplikasi dan database tersedia:
+
+![Dashboard project Railway](image_tutorial/rail_way_dashboard.png)
 
 ### 13.6 Memilih Environment
 
