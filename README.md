@@ -7,8 +7,9 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 1. Menjalankan Laravel secara lokal dengan Docker.
 2. Menghubungkan Laravel ke MySQL container.
 3. Menguji endpoint aplikasi dan koneksi database.
-4. Men-deploy Laravel ke Railway menggunakan Dockerfile.
-5. Menambahkan MySQL service di Railway lewat CLI.
+4. Mengelola blog web pribadi melalui dashboard login.
+5. Men-deploy Laravel ke Railway menggunakan Dockerfile.
+6. Menambahkan MySQL service di Railway lewat CLI.
 
 ## Stack
 
@@ -105,9 +106,27 @@ Menjalankan test:
 php artisan test
 ```
 
-## 4. Tutorial Deployment ke Railway CLI
+## 4. Fitur Aplikasi
 
-### 4.1 Login ke Railway
+Fitur utama:
+
+* Halaman blog publik di `/`
+* Detail post di `/blog/{slug}`
+* Login dashboard di `/login`
+* Dashboard manajemen blog di `/dashboard/posts`
+* CRUD post blog: tambah, edit, publish/draft, hapus
+* Health check aplikasi dan database di `/health`
+
+Akun admin default dibuat oleh seeder:
+
+```text
+Email: admin@example.com
+Password: password
+```
+
+## 5. Tutorial Deployment ke Railway CLI
+
+### 5.1 Login ke Railway
 
 Cek versi CLI:
 
@@ -127,7 +146,7 @@ Cek user:
 railway whoami
 ```
 
-### 4.2 Buat Project Railway
+### 5.2 Buat Project Railway
 
 Dari folder proyek:
 
@@ -147,7 +166,7 @@ Lihat status project:
 railway status
 ```
 
-### 4.3 Tambahkan MySQL di Railway
+### 5.3 Tambahkan MySQL di Railway
 
 Tambahkan database MySQL:
 
@@ -182,7 +201,7 @@ railway variable list --service MySQL --json
 railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-db> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
 ```
 
-### 4.4 Tambahkan Service Aplikasi
+### 5.4 Tambahkan Service Aplikasi
 
 Jika project belum punya service aplikasi:
 
@@ -196,7 +215,7 @@ Jika memakai repo GitHub:
 railway add --service projek-cloud-1 --repo https://github.com/triyono777/projek_cloud_1
 ```
 
-### 4.5 Set Environment Variables
+### 5.5 Set Environment Variables
 
 Buat APP_KEY:
 
@@ -216,7 +235,7 @@ Jika Railway sudah memberi public domain, `docker/start.sh` akan memakai `RAILWA
 railway variable set APP_URL=https://domain-anda.up.railway.app --service projek-cloud-1
 ```
 
-### 4.6 Deploy dari Folder Lokal
+### 5.6 Deploy dari Folder Lokal
 
 Deploy dari folder proyek:
 
@@ -242,7 +261,7 @@ Lihat log:
 railway logs --service projek-cloud-1
 ```
 
-### 4.7 Buat Domain Publik
+### 5.7 Buat Domain Publik
 
 Generate domain Railway untuk service:
 
@@ -257,7 +276,7 @@ https://domain-anda.up.railway.app
 https://domain-anda.up.railway.app/health
 ```
 
-## 5. Alur Kerja yang Disarankan
+## 6. Alur Kerja yang Disarankan
 
 1. Jalankan lokal dengan `docker compose up --build`.
 2. Pastikan halaman utama dan `/health` bisa diakses.
@@ -270,7 +289,7 @@ https://domain-anda.up.railway.app/health
 9. Deploy dengan `railway up --service projek-cloud-1`.
 10. Generate domain dengan `railway domain --service projek-cloud-1`.
 
-## 6. Troubleshooting
+## 7. Troubleshooting
 
 ### Port 8000 sudah dipakai
 
@@ -317,9 +336,11 @@ railway logs --service projek-cloud-1
 
 Jika error database, pastikan MySQL service sudah dibuat dan service aplikasi mendapat variabel MySQL.
 
-## 7. Endpoint yang Tersedia
+## 8. Endpoint yang Tersedia
 
 * `/` menampilkan landing page proyek
+* `/login` menampilkan form login admin
+* `/dashboard/posts` menampilkan dashboard manajemen blog
 * `/health` menampilkan JSON status aplikasi dan status koneksi database
 
 ## Referensi

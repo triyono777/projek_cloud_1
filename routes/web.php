@@ -1,20 +1,30 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\DashboardPostController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome', [
-        'title' => 'Projek Cloud 1',
-        'subtitle' => 'Laravel + Docker + MySQL + Railway',
-        'checks' => [
-            'Framework' => app()->version(),
-            'Environment' => app()->environment(),
-            'Database driver' => config('database.default'),
-            'App URL' => config('app.url'),
-        ],
-    ]);
+Route::get('/', [BlogController::class, 'index'])->name('home');
+Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+
+Route::middleware('guest')->group(function (): void {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 });
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
+
+Route::middleware('auth')
+    ->prefix('dashboard')
+    ->name('dashboard.')
+    ->group(function (): void {
+        Route::redirect('/', '/dashboard/posts')->name('home');
+        Route::resource('posts', DashboardPostController::class)->except('show');
+    });
 
 Route::get('/health', function () {
     try {
