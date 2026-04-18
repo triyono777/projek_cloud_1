@@ -1,13 +1,14 @@
 # Projek Cloud 1
 
-Tutorial praktik Laravel + Docker + MySQL + Render CLI.
+Tutorial praktik Laravel + Docker + MySQL + Railway CLI.
 
 Proyek ini disiapkan agar bisa dipakai langsung untuk:
 
 1. Menjalankan Laravel secara lokal dengan Docker.
 2. Menghubungkan Laravel ke MySQL container.
 3. Menguji endpoint aplikasi dan koneksi database.
-4. Menyiapkan deployment ke Render berbasis Docker.
+4. Men-deploy Laravel ke Railway menggunakan Dockerfile.
+5. Menambahkan MySQL service di Railway lewat CLI.
 
 ## Stack
 
@@ -15,14 +16,15 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 * PHP 8.4
 * MySQL 8.4
 * Docker Compose
-* Render Web Service berbasis Docker
+* Railway CLI
+* Railway service berbasis Dockerfile
 
 ## Struktur File Penting
 
 * `Dockerfile`: image PHP untuk aplikasi Laravel
 * `compose.yaml`: stack lokal Laravel + MySQL
 * `docker/start.sh`: startup script untuk menunggu database dan menjalankan migrasi
-* `render.yaml`: blueprint Render untuk web service
+* `railway.json`: konfigurasi build dan deploy Railway
 * `routes/web.php`: route halaman utama dan endpoint `/health`
 
 ## 1. Menjalankan Proyek Secara Lokal
@@ -103,114 +105,149 @@ Menjalankan test:
 php artisan test
 ```
 
-## 4. Tutorial Deployment ke Render
+## 4. Tutorial Deployment ke Railway CLI
 
-### Catatan penting
+### 4.1 Login ke Railway
 
-Render mendukung deployment aplikasi Docker dengan baik. Berdasarkan dokumentasi Render CLI terbaru, CLI mendukung login, pemilihan workspace, validasi `render.yaml`, melihat service, dan memicu deploy manual. CLI juga dapat memvalidasi blueprint dengan `render blueprints validate` dan memicu deploy dengan `render deploys create`.
-
-Untuk aplikasi ini:
-
-* Web service di Render menggunakan `Dockerfile` dari repositori ini.
-* Database **MySQL di Render tidak disediakan sebagai managed service bawaan** seperti Postgres, jadi untuk produksi Anda perlu menyediakan MySQL eksternal.
-* Untuk tahap belajar, gunakan MySQL lokal via Docker. Untuk deployment Render, isi variabel `DB_*` dengan MySQL eksternal yang Anda miliki.
-
-### 4.1 Login ke Render CLI
-
-Jika belum login:
+Cek versi CLI:
 
 ```bash
-render login
+railway --version
 ```
 
-Periksa workspace:
+Login jika belum:
 
 ```bash
-render workspaces
+railway login
 ```
 
-Pilih workspace aktif:
+Cek user:
 
 ```bash
-render workspace set
+railway whoami
 ```
 
-### 4.2 Validasi Blueprint
+### 4.2 Buat Project Railway
 
-Repositori ini sudah menyediakan `render.yaml`.
-
-Validasi file tersebut:
+Dari folder proyek:
 
 ```bash
-render blueprints validate render.yaml
+railway init --name projek-cloud-1
 ```
 
-Jika valid, Render akan menerima struktur blueprint tanpa error skema.
-
-### 4.3 Push ke Git Repository
-
-Render paling mudah digunakan dengan repo GitHub/GitLab.
-
-Contoh:
+Jika project sudah pernah dibuat di Railway, gunakan:
 
 ```bash
-git remote add origin <URL_REPO_ANDA>
-git push -u origin main
+railway link
 ```
 
-### 4.4 Buat Web Service di Dashboard Render
+Lihat status project:
 
-Langkah yang paling stabil untuk pembuatan awal service:
+```bash
+railway status
+```
 
-1. Buka dashboard Render.
-2. Pilih **New +**.
-3. Pilih **Web Service**.
-4. Hubungkan repository proyek ini.
-5. Pastikan runtime yang dipakai adalah **Docker**.
-6. Pastikan `Dockerfile` dan `render.yaml` terbaca dari root project.
+### 4.3 Tambahkan MySQL di Railway
 
-### 4.5 Isi Environment Variables di Render
+Tambahkan database MySQL:
 
-Set minimal berikut:
+```bash
+railway add --database mysql
+```
+
+Railway akan membuat service MySQL dan menyediakan variabel seperti:
 
 ```env
-APP_NAME=Projek Cloud 1
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://domain-render-anda.onrender.com
-APP_KEY=base64:ISI_APP_KEY_ANDA
-DB_CONNECTION=mysql
-DB_HOST=HOST_MYSQL_PRODUKSI
-DB_PORT=3306
-DB_DATABASE=NAMA_DB
-DB_USERNAME=USERNAME_DB
-DB_PASSWORD=PASSWORD_DB
+MYSQLHOST
+MYSQLPORT
+MYSQLDATABASE
+MYSQLUSER
+MYSQLPASSWORD
 ```
 
-Anda bisa membuat `APP_KEY` lokal dengan:
+Startup script proyek ini otomatis memetakan variabel Railway tersebut ke konfigurasi Laravel:
+
+```env
+DB_HOST=${MYSQLHOST}
+DB_PORT=${MYSQLPORT}
+DB_DATABASE=${MYSQLDATABASE}
+DB_USERNAME=${MYSQLUSER}
+DB_PASSWORD=${MYSQLPASSWORD}
+```
+
+### 4.4 Tambahkan Service Aplikasi
+
+Jika project belum punya service aplikasi:
+
+```bash
+railway add --service projek-cloud-1
+```
+
+Jika memakai repo GitHub:
+
+```bash
+railway add --service projek-cloud-1 --repo https://github.com/triyono777/projek_cloud_1
+```
+
+### 4.5 Set Environment Variables
+
+Buat APP_KEY:
 
 ```bash
 php artisan key:generate --show
 ```
 
-### 4.6 Deploy Ulang dengan Render CLI
-
-Setelah service sudah dibuat, lihat daftar service:
+Set variabel aplikasi:
 
 ```bash
-render services
+railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
 ```
 
-Lalu trigger deploy manual:
+Jika Railway sudah memberi public domain, `docker/start.sh` akan memakai `RAILWAY_PUBLIC_DOMAIN` untuk membuat `APP_URL` otomatis. Jika ingin eksplisit:
 
 ```bash
-render deploys create <SERVICE_ID> --wait
+railway variable set APP_URL=https://domain-anda.up.railway.app --service projek-cloud-1
 ```
 
-Jika ingin melihat daftar deploy:
+### 4.6 Deploy dari Folder Lokal
+
+Deploy dari folder proyek:
 
 ```bash
-render deploys list <SERVICE_ID>
+railway up --service projek-cloud-1
+```
+
+Jika ingin build dan deploy tanpa menempel ke log:
+
+```bash
+railway up --service projek-cloud-1 --detach
+```
+
+Lihat deployment:
+
+```bash
+railway deployment
+```
+
+Lihat log:
+
+```bash
+railway logs --service projek-cloud-1
+```
+
+### 4.7 Buat Domain Publik
+
+Generate domain Railway untuk service:
+
+```bash
+railway domain --service projek-cloud-1
+```
+
+Setelah domain aktif, cek:
+
+```text
+https://domain-anda.up.railway.app
+https://domain-anda.up.railway.app/health
 ```
 
 ## 5. Alur Kerja yang Disarankan
@@ -219,10 +256,12 @@ render deploys list <SERVICE_ID>
 2. Pastikan halaman utama dan `/health` bisa diakses.
 3. Commit perubahan ke Git.
 4. Push ke repository remote.
-5. Validasi `render.yaml` dengan Render CLI.
-6. Hubungkan repo ke Render.
-7. Isi environment variables produksi.
-8. Deploy dan verifikasi endpoint `/health`.
+5. Jalankan `railway init` atau `railway link`.
+6. Tambahkan MySQL dengan `railway add --database mysql`.
+7. Tambahkan service aplikasi dengan `railway add --service projek-cloud-1`.
+8. Set variabel aplikasi dengan `railway variable set`.
+9. Deploy dengan `railway up --service projek-cloud-1`.
+10. Generate domain dengan `railway domain --service projek-cloud-1`.
 
 ## 6. Troubleshooting
 
@@ -242,7 +281,7 @@ Ubah port database host:
 DB_FORWARD_PORT=3308 docker compose up --build
 ```
 
-### Container app gagal terkoneksi ke database
+### Container app gagal terkoneksi ke database lokal
 
 Cek log:
 
@@ -251,14 +290,25 @@ docker compose logs app
 docker compose logs db
 ```
 
-### Deploy Render gagal
+### Deploy Railway gagal
 
 Cek:
 
-* nilai `APP_KEY`
-* nilai `APP_URL`
-* kredensial MySQL produksi
-* log deploy pada dashboard Render
+* `railway status`
+* `railway logs --service projek-cloud-1`
+* variabel `APP_KEY`
+* service MySQL sudah dibuat
+* variabel `MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, `MYSQLUSER`, dan `MYSQLPASSWORD` tersedia
+
+### Health check Railway gagal
+
+Cek endpoint:
+
+```bash
+railway logs --service projek-cloud-1
+```
+
+Jika error database, pastikan MySQL service sudah dibuat dan service aplikasi mendapat variabel MySQL.
 
 ## 7. Endpoint yang Tersedia
 
@@ -267,6 +317,6 @@ Cek:
 
 ## Referensi
 
-* [Render CLI](https://render.com/docs/cli)
-* [Deploying on Render](https://render.com/docs/deploys/)
-* [Blueprint YAML Reference](https://render.com/docs/blueprint-spec)
+* [Railway CLI](https://docs.railway.com/guides/cli)
+* [Railway Deployments](https://docs.railway.com/guides/deployments)
+* [Railway Databases](https://docs.railway.com/guides/databases)

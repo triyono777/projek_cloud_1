@@ -206,12 +206,12 @@
                 <h1>{{ $title }}</h1>
                 <p class="subtitle">
                     {{ $subtitle }}. Proyek ini disiapkan untuk belajar pengembangan lokal dengan container,
-                    koneksi database MySQL, serta deployment aplikasi Laravel ke Render menggunakan alur yang rapi.
+                    koneksi database MySQL, serta deployment aplikasi Laravel ke Railway menggunakan alur yang rapi.
                 </p>
 
                 <div class="actions">
                     <a class="button button-primary" href="/health">Cek Health Endpoint</a>
-                    <a class="button button-secondary" href="https://render.com/docs/cli" target="_blank" rel="noreferrer">Render CLI Docs</a>
+                    <a class="button button-secondary" href="https://docs.railway.com/guides/cli" target="_blank" rel="noreferrer">Railway CLI Docs</a>
                 </div>
             </article>
 
@@ -250,8 +250,8 @@
                 </article>
                 <article class="step">
                     <strong>03</strong>
-                    <h3>Render-ready</h3>
-                    <p>Repositori akan berisi panduan dan konfigurasi agar lebih mudah dipakai dengan Docker dan Render.</p>
+                    <h3>Railway-ready</h3>
+                    <p>Repositori berisi panduan dan konfigurasi agar mudah dipakai dengan Docker dan Railway CLI.</p>
                 </article>
             </div>
         </section>

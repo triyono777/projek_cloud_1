@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 Route::get('/', function () {
     return view('welcome', [
         'title' => 'Projek Cloud 1',
-        'subtitle' => 'Laravel + Docker + MySQL + Render',
+        'subtitle' => 'Laravel + Docker + MySQL + Railway',
         'checks' => [
             'Framework' => app()->version(),
             'Environment' => app()->environment(),
