@@ -39,13 +39,14 @@ Urutan pengerjaan wajib:
 
 1. Clone project dari GitHub.
 2. Buat file `.env`.
-3. Jalankan Docker lokal.
-4. Buka halaman `http://localhost:8000`.
-5. Cek `http://localhost:8000/health`.
-6. Login ke dashboard lokal.
-7. Jalankan test.
-8. Commit dan push perubahan.
-9. Baru lanjut ke Railway.
+3. Generate `APP_KEY` Laravel.
+4. Jalankan Docker lokal.
+5. Buka halaman `http://localhost:8000`.
+6. Cek `http://localhost:8000/health`.
+7. Login ke dashboard lokal.
+8. Jalankan test.
+9. Commit dan push perubahan.
+10. Baru lanjut ke Railway.
 
 Jangan lanjut ke Railway jika aplikasi lokal belum berjalan. Deploy cloud akan lebih sulit diperbaiki jika error lokal belum jelas.
 
@@ -168,6 +169,31 @@ Jika belum ada, buat dari `.env.example`:
 cp .env.example .env
 ```
 
+Setelah `.env` dibuat, generate application key Laravel:
+
+```bash
+docker compose build app
+docker compose run --rm --no-deps app php artisan key:generate
+```
+
+Penjelasan:
+
+- `docker compose build app` membuat image aplikasi agar dependency Laravel tersedia di container.
+- `docker compose run --rm --no-deps app php artisan key:generate` mengisi `APP_KEY` di file `.env`.
+- `--no-deps` membuat perintah ini tidak perlu menyalakan MySQL karena generate key tidak membutuhkan database.
+
+Pastikan `APP_KEY` sudah terisi:
+
+```bash
+grep APP_KEY .env
+```
+
+Contoh hasil yang benar:
+
+```text
+APP_KEY=base64:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
 Pastikan konfigurasi database lokal di `.env` seperti ini:
 
 ```env
@@ -184,8 +210,7 @@ Penjelasan:
 - `DB_HOST=db` dipakai karena container Laravel mengakses container MySQL dengan nama service `db`.
 - `DB_PORT=3306` adalah port MySQL di dalam container.
 - Dari komputer host, MySQL diteruskan ke port `3307`.
-
-Jika `APP_KEY` kosong, nanti bisa dibuat dengan perintah Laravel setelah dependency tersedia.
+- `APP_KEY` wajib terisi agar fitur session, cookie, login, dan enkripsi Laravel berjalan benar.
 
 ## 7. Menjalankan Project dengan Docker
 
@@ -206,6 +231,8 @@ Perintah ini akan:
 - Menjalankan migration.
 - Menjalankan seeder.
 - Menjalankan Laravel di port `8000`.
+
+Jika sebelumnya sudah menjalankan `docker compose build app`, perintah `docker compose up --build` tetap aman dijalankan. Docker akan memakai cache build jika tidak ada perubahan besar.
 
 Tampilan Docker Desktop saat container berjalan:
 
@@ -294,6 +321,12 @@ Fitur dashboard:
 
 ## 10. Perintah Laravel di Dalam Docker
 
+Generate ulang `APP_KEY` jika `.env` baru dibuat atau `APP_KEY` masih kosong:
+
+```bash
+docker compose run --rm --no-deps app php artisan key:generate
+```
+
 Jalankan migration:
 
 ```bash
@@ -337,6 +370,8 @@ Sebelum membuka Railway atau menjalankan `railway up`, pastikan semua checklist 
 Checklist lokal:
 
 - Docker Desktop sudah berjalan.
+- File `.env` sudah dibuat dari `.env.example`.
+- `APP_KEY` di `.env` sudah terisi.
 - `docker compose up --build` berhasil.
 - Container `app` dan `db` aktif.
 - Halaman `http://localhost:8000` bisa dibuka.
@@ -350,6 +385,7 @@ Perintah cek cepat:
 
 ```bash
 docker compose ps
+grep APP_KEY .env
 curl -sS http://localhost:8000/health
 docker compose exec app php artisan test
 ```
@@ -537,8 +573,10 @@ Artinya:
 Buat `APP_KEY`:
 
 ```bash
-php artisan key:generate --show
+docker compose run --rm --no-deps app php artisan key:generate --show
 ```
+
+Perintah ini hanya menampilkan key baru untuk production. Salin hasilnya, lalu pakai untuk variable `APP_KEY` di Railway.
 
 Set variable Laravel:
 
@@ -809,6 +847,8 @@ Jalankan lokal:
 
 ```bash
 cp .env.example .env
+docker compose build app
+docker compose run --rm --no-deps app php artisan key:generate
 docker compose up --build
 ```
 
@@ -816,6 +856,7 @@ Validasi lokal sebelum Railway:
 
 ```bash
 docker compose ps
+grep APP_KEY .env
 curl -sS http://localhost:8000/health
 docker compose exec app php artisan test
 ```
