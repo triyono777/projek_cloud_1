@@ -14,7 +14,139 @@ Folder lokal project:
 /Users/triyono/Projek/projek_cloud_1
 ```
 
-## 1. Tujuan Pembelajaran
+## 1. Apa Itu Docker
+
+Docker adalah alat untuk menjalankan aplikasi di dalam container.
+
+Container bisa dibayangkan seperti kotak aplikasi yang berisi semua kebutuhan aplikasi agar bisa berjalan, misalnya:
+
+- PHP
+- Composer
+- Extension PHP
+- Source code aplikasi
+- Konfigurasi server
+- Tool pendukung
+
+Dengan Docker, aplikasi tidak terlalu bergantung pada setting komputer masing-masing. Selama komputer memiliki Docker, aplikasi bisa dijalankan dengan cara yang hampir sama.
+
+Contoh masalah tanpa Docker:
+
+```text
+Laptop A memakai PHP 8.4
+Laptop B memakai PHP 8.1
+Server memakai PHP 8.2
+```
+
+Akibatnya aplikasi bisa berjalan di satu tempat tetapi error di tempat lain.
+
+Dengan Docker:
+
+```text
+Semua menjalankan aplikasi dari image yang sama
+```
+
+Hasilnya environment lebih konsisten.
+
+## 2. Analogi Sederhana Docker
+
+Bayangkan aplikasi Laravel seperti makanan yang ingin dikirim ke banyak tempat.
+
+Tanpa Docker:
+
+- Setiap tempat harus menyiapkan dapur sendiri.
+- Kompor bisa berbeda.
+- Bahan bisa kurang.
+- Cara memasak bisa tidak sama.
+
+Dengan Docker:
+
+- Aplikasi dikemas bersama alat dan kebutuhannya.
+- Cara menjalankan aplikasi ditulis di file konfigurasi.
+- Komputer lain cukup menjalankan container.
+
+Analogi singkat:
+
+```text
+Dockerfile = resep membuat paket aplikasi
+Image = paket aplikasi yang sudah dibuat
+Container = paket aplikasi yang sedang berjalan
+Docker Compose = cara menjalankan beberapa container sekaligus
+```
+
+## 3. Bagaimana Memulai Docker
+
+Untuk pemula, urutan belajar Docker yang disarankan adalah:
+
+1. Install Docker Desktop.
+2. Cek perintah `docker` dan `docker compose`.
+3. Pahami apa itu image dan container.
+4. Buat atau baca `Dockerfile`.
+5. Buat atau baca `compose.yaml`.
+6. Jalankan aplikasi dengan `docker compose up`.
+7. Cek aplikasi di browser.
+8. Lihat log container jika terjadi error.
+9. Hentikan container dengan `docker compose down`.
+
+Perintah dasar yang sering dipakai:
+
+```bash
+docker --version
+docker compose version
+docker compose build
+docker compose up
+docker compose up -d
+docker compose ps
+docker compose logs
+docker compose down
+```
+
+Penjelasan singkat:
+
+- `docker --version` mengecek Docker sudah terinstall.
+- `docker compose version` mengecek Docker Compose tersedia.
+- `docker compose build` membuat image.
+- `docker compose up` menjalankan container.
+- `docker compose up -d` menjalankan container di background.
+- `docker compose ps` melihat container yang aktif.
+- `docker compose logs` melihat log container.
+- `docker compose down` menghentikan container.
+
+## 4. File Apa Saja yang Dibuat
+
+Untuk setting Docker pada aplikasi Laravel, file utama yang perlu dibuat atau disiapkan adalah:
+
+```text
+Dockerfile
+compose.yaml
+docker/start.sh
+.dockerignore
+.env
+```
+
+Fungsi masing-masing file:
+
+- `Dockerfile`: instruksi untuk membuat image aplikasi Laravel.
+- `compose.yaml`: konfigurasi untuk menjalankan container Laravel dan MySQL.
+- `docker/start.sh`: script yang dijalankan saat container aplikasi mulai.
+- `.dockerignore`: daftar file yang tidak perlu ikut masuk saat build image.
+- `.env`: konfigurasi aplikasi Laravel, database, port, dan environment lokal.
+
+Jika membuat setting Docker dari nol, perintah awalnya bisa seperti ini:
+
+```bash
+mkdir -p docker
+touch Dockerfile
+touch compose.yaml
+touch docker/start.sh
+touch .dockerignore
+cp .env.example .env
+```
+
+Setelah file dibuat, isi masing-masing file dengan konfigurasi yang sesuai. Pada bagian berikutnya, tutorial ini membahas isi `Dockerfile`, `compose.yaml`, dan `docker/start.sh` satu per satu.
+
+Untuk studi kasus ini, file tersebut sudah tersedia di repository. Tugas kita adalah memahami isinya, melakukan setting `.env`, lalu menjalankan aplikasi dengan Docker.
+
+## 5. Tujuan Pembelajaran
 
 Setelah mengikuti tutorial ini, mahasiswa diharapkan bisa:
 
@@ -26,7 +158,7 @@ Setelah mengikuti tutorial ini, mahasiswa diharapkan bisa:
 - Melakukan migration dan seeding database melalui container.
 - Melakukan troubleshooting dasar Docker.
 
-## 2. Kenapa Menggunakan Docker
+## 6. Kenapa Menggunakan Docker
 
 Tanpa Docker, setiap komputer harus menginstall PHP, Composer, MySQL, extension PHP, dan konfigurasi server secara manual. Masalah yang sering muncul:
 
@@ -55,7 +187,7 @@ Untuk aplikasi yang butuh database:
 Laravel Container + MySQL Container -> Docker Compose
 ```
 
-## 3. Istilah Penting Docker
+## 7. Istilah Penting Docker
 
 ### Image
 
@@ -126,9 +258,18 @@ Artinya:
 - Port `8000` di komputer lokal diarahkan ke port `8000` di container.
 - Aplikasi bisa dibuka di `http://localhost:8000`.
 
-## 4. Prasyarat
+## 8. Prasyarat
 
 Pastikan Docker Desktop sudah terinstall dan berjalan.
+
+Langkah memulai Docker Desktop untuk pemula:
+
+1. Download Docker Desktop dari website Docker.
+2. Install Docker Desktop sesuai sistem operasi.
+3. Buka Docker Desktop.
+4. Tunggu sampai Docker aktif.
+5. Buka terminal.
+6. Jalankan perintah cek versi Docker.
 
 Cek Docker:
 
@@ -144,7 +285,7 @@ docker compose version
 
 Jika perintah di atas berhasil, Docker siap digunakan.
 
-## 5. Clone Project Studi Kasus
+## 9. Clone Project Studi Kasus
 
 Masuk ke folder kerja:
 
@@ -183,7 +324,7 @@ File Docker yang dipakai:
 - `docker/start.sh`
 - `.dockerignore`
 
-## 6. Struktur Docker pada Project Laravel
+## 10. Struktur Docker pada Project Laravel
 
 Struktur file penting:
 
@@ -209,7 +350,46 @@ Penjelasan:
 - `.dockerignore` mengatur file yang tidak perlu ikut masuk build image.
 - `.env.example` adalah contoh konfigurasi environment.
 
-## 7. Membuat File Environment
+## 11. Alur Setting Docker untuk Laravel
+
+Secara praktis, setting Docker untuk aplikasi Laravel dilakukan dengan urutan berikut:
+
+1. Buat `Dockerfile`.
+2. Buat folder `docker/`.
+3. Buat script `docker/start.sh`.
+4. Buat `compose.yaml`.
+5. Buat `.dockerignore`.
+6. Buat `.env` dari `.env.example`.
+7. Generate `APP_KEY`.
+8. Build image aplikasi.
+9. Jalankan container Laravel dan MySQL.
+10. Cek aplikasi di browser.
+
+Pada project ini, file `Dockerfile`, `compose.yaml`, `docker/start.sh`, dan `.dockerignore` sudah dibuat. Jadi langkah praktik yang perlu dilakukan setelah clone adalah:
+
+```bash
+cp .env.example .env
+docker compose build app
+docker compose run --rm --no-deps app php artisan key:generate
+docker compose up --build
+```
+
+Makna tiap langkah:
+
+- `cp .env.example .env` membuat konfigurasi lokal Laravel.
+- `docker compose build app` membuat image aplikasi dari `Dockerfile`.
+- `docker compose run --rm --no-deps app php artisan key:generate` mengisi `APP_KEY`.
+- `docker compose up --build` menjalankan service Laravel dan MySQL.
+
+Setelah itu, buka:
+
+```text
+http://localhost:8000
+```
+
+Jika halaman terbuka, berarti setting Docker lokal berhasil.
+
+## 12. Membuat File Environment
 
 Laravel membutuhkan file `.env`.
 
@@ -259,7 +439,7 @@ APP_KEY=base64:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 `APP_KEY` wajib ada karena Laravel menggunakannya untuk session, cookie, enkripsi, dan login.
 
-## 8. Membahas Dockerfile Laravel
+## 13. Membahas Dockerfile Laravel
 
 File yang dipakai:
 
@@ -348,7 +528,7 @@ Kesimpulan:
 - Semua dependency PHP dan Composer dipasang di image.
 - Saat container berjalan, command `start-app` dipanggil.
 
-## 9. Membahas compose.yaml
+## 14. Membahas compose.yaml
 
 File yang dipakai:
 
@@ -439,7 +619,7 @@ Penjelasan:
 - `mysql_data` menjaga data MySQL tetap ada walaupun container dimatikan.
 - `vendor_data` menjaga folder `vendor` Composer di container.
 
-## 10. Membahas docker/start.sh
+## 15. Membahas docker/start.sh
 
 File yang dipakai:
 
@@ -508,7 +688,7 @@ Menjalankan Laravel server:
 exec php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"
 ```
 
-## 11. Menjalankan Aplikasi Laravel dengan Docker
+## 16. Menjalankan Aplikasi Laravel dengan Docker
 
 Pastikan berada di folder project:
 
@@ -545,7 +725,7 @@ projek_cloud_1_app
 projek_cloud_1_db
 ```
 
-## 12. Membuka Aplikasi Laravel
+## 17. Membuka Aplikasi Laravel
 
 Buka browser:
 
@@ -575,7 +755,7 @@ Hasil yang diharapkan:
 }
 ```
 
-## 13. Studi Kasus: Web Pribadi Laravel dengan Blog
+## 18. Studi Kasus: Web Pribadi Laravel dengan Blog
 
 Aplikasi Laravel ini adalah studi kasus web pribadi dengan fitur blog.
 
@@ -626,7 +806,7 @@ Alur praktik studi kasus:
 8. Publish kembali artikel.
 9. Hapus artikel jika diperlukan.
 
-## 14. Perintah Laravel di Container
+## 19. Perintah Laravel di Container
 
 Menjalankan migration:
 
@@ -664,7 +844,7 @@ Keluar dari shell container:
 exit
 ```
 
-## 15. Mengakses MySQL Lokal
+## 20. Mengakses MySQL Lokal
 
 MySQL berjalan di dalam container pada port `3306`.
 
@@ -692,7 +872,7 @@ Masukkan password:
 secret123
 ```
 
-## 16. Menghentikan dan Membersihkan Container
+## 21. Menghentikan dan Membersihkan Container
 
 Menghentikan container:
 
@@ -724,7 +904,7 @@ Jalankan ulang:
 docker compose up --build
 ```
 
-## 17. Workflow Harian Developer
+## 22. Workflow Harian Developer
 
 Workflow yang disarankan:
 
@@ -759,7 +939,7 @@ Jika ingin reset data demo:
 docker compose exec app php artisan db:seed --force
 ```
 
-## 18. Troubleshooting Docker
+## 23. Troubleshooting Docker
 
 ### Docker belum berjalan
 
@@ -855,7 +1035,7 @@ docker compose up --build
 
 Setelah itu migration dan seeder akan berjalan ulang.
 
-## 19. Ringkasan Perintah Penting
+## 24. Ringkasan Perintah Penting
 
 Setup awal:
 
@@ -905,7 +1085,7 @@ docker compose down -v
 docker compose up --build
 ```
 
-## 20. Latihan
+## 25. Latihan
 
 Latihan dasar:
 
@@ -928,7 +1108,7 @@ Latihan lanjutan:
 4. Tambahkan satu migration baru.
 5. Jalankan migration dari container.
 
-## 21. Kesimpulan
+## 26. Kesimpulan
 
 Docker membantu membuat environment Laravel yang konsisten. Pada studi kasus ini, Docker dipakai untuk menjalankan:
 
