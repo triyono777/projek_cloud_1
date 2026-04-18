@@ -16,6 +16,7 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 * Laravel 13
 * PHP 8.4
 * MySQL 8.4
+* phpMyAdmin 5.2 untuk kebutuhan lokal
 * Docker Compose
 * Railway CLI
 * Railway service berbasis Dockerfile
@@ -23,7 +24,7 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 ## Struktur File Penting
 
 * `Dockerfile`: image PHP untuk aplikasi Laravel
-* `compose.yaml`: stack lokal Laravel + MySQL
+* `compose.yaml`: stack lokal Laravel + MySQL + phpMyAdmin
 * `docker/start.sh`: startup script untuk menunggu database dan menjalankan migrasi
 * `railway.json`: konfigurasi build dan deploy Railway
 * `routes/web.php`: route halaman utama dan endpoint `/health`
@@ -46,6 +47,7 @@ Setelah service aktif, buka:
 
 * Aplikasi: [http://localhost:8000](http://localhost:8000)
 * Health check: [http://localhost:8000/health](http://localhost:8000/health)
+* phpMyAdmin: [http://localhost:8081](http://localhost:8081)
 
 Jika ingin menjalankan di background:
 
@@ -83,6 +85,18 @@ Jadi jika ingin mengakses MySQL dari host, gunakan:
 * Host: `127.0.0.1`
 * Port: `3307`
 * Database: `projek_cloud_1`
+* Username: `projek_cloud_1`
+* Password: `secret123`
+
+Jika ingin mengelola database lewat browser, buka phpMyAdmin:
+
+```text
+http://localhost:8081
+```
+
+Login phpMyAdmin:
+
+* Server: `db`
 * Username: `projek_cloud_1`
 * Password: `secret123`
 
@@ -305,6 +319,14 @@ Ubah port database host:
 
 ```bash
 DB_FORWARD_PORT=3308 docker compose up --build
+```
+
+### Port 8081 phpMyAdmin sudah dipakai
+
+Ubah port phpMyAdmin:
+
+```bash
+PHPMYADMIN_PORT=8082 docker compose up --build
 ```
 
 ### Container app gagal terkoneksi ke database lokal

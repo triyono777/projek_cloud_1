@@ -232,6 +232,7 @@ Pada project Laravel ini, Docker Compose menjalankan:
 
 - Container `app` untuk Laravel.
 - Container `db` untuk MySQL.
+- Container `phpmyadmin` untuk mengelola MySQL lewat browser.
 
 ### Volume
 
@@ -408,6 +409,7 @@ DB_PORT=3306
 DB_DATABASE=projek_cloud_1
 DB_USERNAME=projek_cloud_1
 DB_PASSWORD=secret123
+PHPMYADMIN_PORT=8081
 ```
 
 Penjelasan:
@@ -417,6 +419,7 @@ Penjelasan:
 - `DB_DATABASE=projek_cloud_1` adalah nama database.
 - `DB_USERNAME=projek_cloud_1` adalah username database.
 - `DB_PASSWORD=secret123` adalah password database lokal.
+- `PHPMYADMIN_PORT=8081` adalah port phpMyAdmin di komputer lokal.
 
 Generate `APP_KEY` Laravel:
 
@@ -536,10 +539,11 @@ File yang dipakai:
 compose.yaml
 ```
 
-Project ini memiliki dua service:
+Project ini memiliki tiga service:
 
 - `app`
 - `db`
+- `phpmyadmin`
 
 ### Service app
 
@@ -605,6 +609,33 @@ Penjelasan:
 - `ports` membuka MySQL dari host di port `3307`.
 - `volumes` menyimpan data database.
 - `healthcheck` mengecek apakah MySQL sudah siap menerima koneksi.
+
+### Service phpmyadmin
+
+```yaml
+phpmyadmin:
+  image: phpmyadmin:5.2
+  container_name: projek_cloud_1_phpmyadmin
+  restart: unless-stopped
+  depends_on:
+    db:
+      condition: service_healthy
+  environment:
+    PMA_HOST: db
+    PMA_PORT: 3306
+    UPLOAD_LIMIT: 64M
+  ports:
+    - "${PHPMYADMIN_PORT:-8081}:80"
+```
+
+Penjelasan:
+
+- `image: phpmyadmin:5.2` memakai image phpMyAdmin.
+- `depends_on` membuat phpMyAdmin menunggu MySQL sehat.
+- `PMA_HOST: db` mengarahkan phpMyAdmin ke service MySQL.
+- `PMA_PORT: 3306` memakai port MySQL di dalam network Docker.
+- `UPLOAD_LIMIT: 64M` menaikkan batas upload file SQL.
+- `ports` membuka phpMyAdmin di `http://localhost:8081`.
 
 ### Volumes
 
@@ -872,6 +903,25 @@ Masukkan password:
 secret123
 ```
 
+Jika ingin memakai phpMyAdmin, buka:
+
+```text
+http://localhost:8081
+```
+
+Login phpMyAdmin:
+
+```text
+Server: db
+Username: projek_cloud_1
+Password: secret123
+```
+
+Catatan:
+
+- phpMyAdmin hanya untuk kebutuhan lokal.
+- Service ini tidak dipakai oleh Railway karena Railway menggunakan `Dockerfile`, bukan `compose.yaml`.
+
 ## 21. Menghentikan dan Membersihkan Container
 
 Menghentikan container:
@@ -981,6 +1031,20 @@ Koneksi MySQL dari host menjadi:
 
 ```text
 127.0.0.1:3308
+```
+
+### Port phpMyAdmin 8081 sudah dipakai
+
+Gunakan port lain:
+
+```bash
+PHPMYADMIN_PORT=8082 docker compose up --build
+```
+
+Buka:
+
+```text
+http://localhost:8082
 ```
 
 ### APP_KEY kosong

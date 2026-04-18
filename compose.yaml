@@ -37,6 +37,20 @@ services:
       retries: 20
       start_period: 15s
 
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: projek_cloud_1_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "${PHPMYADMIN_PORT:-8081}:80"
+
 volumes:
   mysql_data:
   vendor_data:

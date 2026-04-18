@@ -149,7 +149,7 @@ Jika output menampilkan `working tree clean`, berarti tidak ada perubahan lokal 
 File dan folder penting:
 
 - `Dockerfile`: instruksi membuat image Docker Laravel.
-- `compose.yaml`: menjalankan container Laravel dan MySQL secara lokal.
+- `compose.yaml`: menjalankan container Laravel, MySQL, dan phpMyAdmin secara lokal.
 - `docker/start.sh`: script startup aplikasi.
 - `railway.json`: konfigurasi build dan deploy Railway.
 - `.env.example`: contoh file environment Laravel.
@@ -203,6 +203,7 @@ DB_PORT=3306
 DB_DATABASE=projek_cloud_1
 DB_USERNAME=projek_cloud_1
 DB_PASSWORD=secret123
+PHPMYADMIN_PORT=8081
 ```
 
 Penjelasan:
@@ -210,6 +211,7 @@ Penjelasan:
 - `DB_HOST=db` dipakai karena container Laravel mengakses container MySQL dengan nama service `db`.
 - `DB_PORT=3306` adalah port MySQL di dalam container.
 - Dari komputer host, MySQL diteruskan ke port `3307`.
+- `PHPMYADMIN_PORT=8081` membuka phpMyAdmin lokal di browser.
 - `APP_KEY` wajib terisi agar fitur session, cookie, login, dan enkripsi Laravel berjalan benar.
 
 ## 7. Menjalankan Project dengan Docker
@@ -227,10 +229,19 @@ Perintah ini akan:
 - Membuat image aplikasi Laravel dari `Dockerfile`.
 - Menjalankan container Laravel.
 - Menjalankan container MySQL.
+- Menjalankan container phpMyAdmin untuk kebutuhan database lokal.
 - Membaca konfigurasi dari `.env`.
 - Menjalankan migration.
 - Menjalankan seeder.
 - Menjalankan Laravel di port `8000`.
+
+Setelah service aktif, alamat lokal yang bisa dibuka:
+
+```text
+Aplikasi: http://localhost:8000
+Health check: http://localhost:8000/health
+phpMyAdmin: http://localhost:8081
+```
 
 Jika sebelumnya sudah menjalankan `docker compose build app`, perintah `docker compose up --build` tetap aman dijalankan. Docker akan memakai cache build jika tidak ada perubahan besar.
 
@@ -766,6 +777,12 @@ Jika port MySQL `3307` sudah dipakai:
 
 ```bash
 DB_FORWARD_PORT=3308 docker compose up --build
+```
+
+Jika port phpMyAdmin `8081` sudah dipakai:
+
+```bash
+PHPMYADMIN_PORT=8082 docker compose up --build
 ```
 
 Jika container error:
