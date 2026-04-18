@@ -1,58 +1,272 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projek Cloud 1
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Tutorial praktik Laravel + Docker + MySQL + Render CLI.
 
-## About Laravel
+Proyek ini disiapkan agar bisa dipakai langsung untuk:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Menjalankan Laravel secara lokal dengan Docker.
+2. Menghubungkan Laravel ke MySQL container.
+3. Menguji endpoint aplikasi dan koneksi database.
+4. Menyiapkan deployment ke Render berbasis Docker.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Laravel 13
+* PHP 8.4
+* MySQL 8.4
+* Docker Compose
+* Render Web Service berbasis Docker
 
-## Learning Laravel
+## Struktur File Penting
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* `Dockerfile`: image PHP untuk aplikasi Laravel
+* `compose.yaml`: stack lokal Laravel + MySQL
+* `docker/start.sh`: startup script untuk menunggu database dan menjalankan migrasi
+* `render.yaml`: blueprint Render untuk web service
+* `routes/web.php`: route halaman utama dan endpoint `/health`
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 1. Menjalankan Proyek Secara Lokal
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Masuk ke folder proyek:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+cd /Users/triyono/Projek/projek_cloud_1
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Jalankan container:
 
-## Contributing
+```bash
+docker compose up --build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Setelah service aktif, buka:
 
-## Code of Conduct
+* Aplikasi: [http://localhost:8000](http://localhost:8000)
+* Health check: [http://localhost:8000/health](http://localhost:8000/health)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Jika ingin menjalankan di background:
 
-## Security Vulnerabilities
+```bash
+docker compose up -d --build
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Untuk menghentikan service:
 
-## License
+```bash
+docker compose down
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 2. Konfigurasi MySQL Lokal
+
+Konfigurasi default lokal:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=projek_cloud_1
+DB_USERNAME=projek_cloud_1
+DB_PASSWORD=secret123
+```
+
+Port MySQL yang diteruskan ke host:
+
+```text
+3307 -> 3306
+```
+
+Jadi jika ingin mengakses MySQL dari host, gunakan:
+
+* Host: `127.0.0.1`
+* Port: `3307`
+* Database: `projek_cloud_1`
+* Username: `projek_cloud_1`
+* Password: `secret123`
+
+## 3. Perintah Laravel yang Berguna
+
+Menjalankan migrasi manual:
+
+```bash
+docker compose exec app php artisan migrate
+```
+
+Masuk ke shell container aplikasi:
+
+```bash
+docker compose exec app sh
+```
+
+Menjalankan test:
+
+```bash
+php artisan test
+```
+
+## 4. Tutorial Deployment ke Render
+
+### Catatan penting
+
+Render mendukung deployment aplikasi Docker dengan baik. Berdasarkan dokumentasi Render CLI terbaru, CLI mendukung login, pemilihan workspace, validasi `render.yaml`, melihat service, dan memicu deploy manual. CLI juga dapat memvalidasi blueprint dengan `render blueprints validate` dan memicu deploy dengan `render deploys create`.
+
+Untuk aplikasi ini:
+
+* Web service di Render menggunakan `Dockerfile` dari repositori ini.
+* Database **MySQL di Render tidak disediakan sebagai managed service bawaan** seperti Postgres, jadi untuk produksi Anda perlu menyediakan MySQL eksternal.
+* Untuk tahap belajar, gunakan MySQL lokal via Docker. Untuk deployment Render, isi variabel `DB_*` dengan MySQL eksternal yang Anda miliki.
+
+### 4.1 Login ke Render CLI
+
+Jika belum login:
+
+```bash
+render login
+```
+
+Periksa workspace:
+
+```bash
+render workspaces
+```
+
+Pilih workspace aktif:
+
+```bash
+render workspace set
+```
+
+### 4.2 Validasi Blueprint
+
+Repositori ini sudah menyediakan `render.yaml`.
+
+Validasi file tersebut:
+
+```bash
+render blueprints validate render.yaml
+```
+
+Jika valid, Render akan menerima struktur blueprint tanpa error skema.
+
+### 4.3 Push ke Git Repository
+
+Render paling mudah digunakan dengan repo GitHub/GitLab.
+
+Contoh:
+
+```bash
+git remote add origin <URL_REPO_ANDA>
+git push -u origin main
+```
+
+### 4.4 Buat Web Service di Dashboard Render
+
+Langkah yang paling stabil untuk pembuatan awal service:
+
+1. Buka dashboard Render.
+2. Pilih **New +**.
+3. Pilih **Web Service**.
+4. Hubungkan repository proyek ini.
+5. Pastikan runtime yang dipakai adalah **Docker**.
+6. Pastikan `Dockerfile` dan `render.yaml` terbaca dari root project.
+
+### 4.5 Isi Environment Variables di Render
+
+Set minimal berikut:
+
+```env
+APP_NAME=Projek Cloud 1
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://domain-render-anda.onrender.com
+APP_KEY=base64:ISI_APP_KEY_ANDA
+DB_CONNECTION=mysql
+DB_HOST=HOST_MYSQL_PRODUKSI
+DB_PORT=3306
+DB_DATABASE=NAMA_DB
+DB_USERNAME=USERNAME_DB
+DB_PASSWORD=PASSWORD_DB
+```
+
+Anda bisa membuat `APP_KEY` lokal dengan:
+
+```bash
+php artisan key:generate --show
+```
+
+### 4.6 Deploy Ulang dengan Render CLI
+
+Setelah service sudah dibuat, lihat daftar service:
+
+```bash
+render services
+```
+
+Lalu trigger deploy manual:
+
+```bash
+render deploys create <SERVICE_ID> --wait
+```
+
+Jika ingin melihat daftar deploy:
+
+```bash
+render deploys list <SERVICE_ID>
+```
+
+## 5. Alur Kerja yang Disarankan
+
+1. Jalankan lokal dengan `docker compose up --build`.
+2. Pastikan halaman utama dan `/health` bisa diakses.
+3. Commit perubahan ke Git.
+4. Push ke repository remote.
+5. Validasi `render.yaml` dengan Render CLI.
+6. Hubungkan repo ke Render.
+7. Isi environment variables produksi.
+8. Deploy dan verifikasi endpoint `/health`.
+
+## 6. Troubleshooting
+
+### Port 8000 sudah dipakai
+
+Ubah port host:
+
+```bash
+APP_PORT=8080 docker compose up --build
+```
+
+### Port 3307 sudah dipakai
+
+Ubah port database host:
+
+```bash
+DB_FORWARD_PORT=3308 docker compose up --build
+```
+
+### Container app gagal terkoneksi ke database
+
+Cek log:
+
+```bash
+docker compose logs app
+docker compose logs db
+```
+
+### Deploy Render gagal
+
+Cek:
+
+* nilai `APP_KEY`
+* nilai `APP_URL`
+* kredensial MySQL produksi
+* log deploy pada dashboard Render
+
+## 7. Endpoint yang Tersedia
+
+* `/` menampilkan landing page proyek
+* `/health` menampilkan JSON status aplikasi dan status koneksi database
+
+## Referensi
+
+* [Render CLI](https://render.com/docs/cli)
+* [Deploying on Render](https://render.com/docs/deploys/)
+* [Blueprint YAML Reference](https://render.com/docs/blueprint-spec)
