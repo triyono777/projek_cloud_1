@@ -2,6 +2,27 @@
 
 Tutorial praktik Laravel + Docker + MySQL + Railway CLI.
 
+## Mulai dari Sini
+
+Untuk pemula yang ingin langsung praktik dari awal, gunakan:
+
+### [Buka Tutorial Utama: tutorial_v2.md](tutorial_v2.md)
+
+[tutorial_v2.md](tutorial_v2.md) berisi alur praktik lengkap:
+
+1. Clone project dari GitHub.
+2. Setup `.env`.
+3. Generate `APP_KEY`.
+4. Jalankan aplikasi lokal dengan Docker.
+5. Akses aplikasi dan phpMyAdmin.
+6. Validasi lokal.
+7. Setup Railway CLI.
+8. Deploy ke Railway.
+9. Set domain dan `APP_URL`.
+10. Troubleshooting error umum.
+
+Jika hanya ingin langsung mengikuti langkah praktik, baca [tutorial_v2.md](tutorial_v2.md) terlebih dahulu.
+
 Proyek ini disiapkan agar bisa dipakai langsung untuk:
 
 1. Menjalankan Laravel secara lokal dengan Docker.
@@ -13,18 +34,18 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 
 ## Tutorial yang Tersedia
 
-Gunakan file tutorial sesuai kebutuhan belajar:
+Tutorial utama untuk praktik adalah [tutorial_v2.md](tutorial_v2.md). File lain disediakan sebagai referensi tambahan.
 
 | File | Fokus | Kapan Dipakai |
 | --- | --- | --- |
-| [tutorial_v2.md](tutorial_v2.md) | Alur utama dari `git clone`, Docker lokal, validasi lokal, lalu deploy Railway | Dipakai sebagai panduan praktik utama untuk pemula |
+| [tutorial_v2.md](tutorial_v2.md) | Alur utama dari `git clone`, Docker lokal, validasi lokal, lalu deploy Railway | Wajib dibaca pertama untuk pemula yang ingin langsung praktik |
 | [tutorial.md](tutorial.md) | Modul lengkap Laravel, Docker, MySQL, Railway CLI, dan troubleshooting | Dipakai sebagai materi detail atau modul pembelajaran penuh |
 | [tutorial_docker.md](tutorial_docker.md) | Konsep Docker, file Docker yang dibuat, `Dockerfile`, `compose.yaml`, dan studi kasus Laravel | Dipakai saat fokus belajar Docker terlebih dahulu |
 
 Urutan belajar yang disarankan:
 
-1. Baca [tutorial_docker.md](tutorial_docker.md) untuk memahami Docker.
-2. Ikuti [tutorial_v2.md](tutorial_v2.md) untuk praktik dari clone sampai deploy.
+1. Ikuti [tutorial_v2.md](tutorial_v2.md) untuk praktik dari clone sampai deploy.
+2. Baca [tutorial_docker.md](tutorial_docker.md) jika ingin memahami Docker lebih dalam.
 3. Gunakan [tutorial.md](tutorial.md) sebagai referensi lengkap saat butuh penjelasan tambahan.
 
 ## Galeri Screenshot
