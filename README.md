@@ -155,7 +155,7 @@ Tambahkan database MySQL:
 railway add --database mysql
 ```
 
-Railway akan membuat service MySQL dan menyediakan variabel seperti:
+Railway akan membuat service MySQL dan menyediakan variabel pada service database seperti:
 
 ```env
 MYSQLHOST
@@ -165,7 +165,7 @@ MYSQLUSER
 MYSQLPASSWORD
 ```
 
-Startup script proyek ini otomatis memetakan variabel Railway tersebut ke konfigurasi Laravel:
+Jika aplikasi dibuat dari template yang otomatis mewarisi variabel database, startup script proyek ini akan memetakan variabel Railway tersebut ke konfigurasi Laravel:
 
 ```env
 DB_HOST=${MYSQLHOST}
@@ -173,6 +173,13 @@ DB_PORT=${MYSQLPORT}
 DB_DATABASE=${MYSQLDATABASE}
 DB_USERNAME=${MYSQLUSER}
 DB_PASSWORD=${MYSQLPASSWORD}
+```
+
+Jika menggunakan `railway up` dari folder lokal dan service aplikasi tidak otomatis menerima variabel MySQL, salin variabel MySQL ke service aplikasi:
+
+```bash
+railway variable list --service MySQL --json
+railway variable set MYSQLHOST=<mysql-host> MYSQLPORT=<mysql-port> MYSQLDATABASE=<mysql-db> MYSQLUSER=<mysql-user> MYSQLPASSWORD=<mysql-password> --service projek-cloud-1
 ```
 
 ### 4.4 Tambahkan Service Aplikasi
