@@ -590,16 +590,33 @@ docker compose run --rm --no-deps app php artisan key:generate --show
 
 Perintah ini hanya menampilkan key baru untuk production. Salin hasilnya, lalu pakai untuk variable `APP_KEY` di Railway.
 
-Set variable Laravel:
+Set variable Laravel satu per satu:
 
 ```bash
-railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
+railway variable set APP_NAME="Projek Cloud 1" --service projek-cloud-1
+railway variable set APP_ENV="production" --service projek-cloud-1
+railway variable set APP_DEBUG="false" --service projek-cloud-1
+railway variable set APP_KEY="base64:ISI_APP_KEY_ANDA" --service projek-cloud-1
 ```
 
-Jika ingin set URL production manual:
+Set `APP_URL` sesuai domain Railway yang muncul di browser atau output deploy.
+
+Contoh:
 
 ```bash
-railway variable set APP_URL=https://projek-cloud-1-production.up.railway.app --service projek-cloud-1
+railway variable set APP_URL="https://projek-cloud-1-production.up.railway.app" --service projek-cloud-1
+```
+
+Jika domain Railway Anda berbeda, misalnya:
+
+```text
+https://projek-cloud-1-production-2f9c.up.railway.app
+```
+
+Maka gunakan:
+
+```bash
+railway variable set APP_URL="https://projek-cloud-1-production-2f9c.up.railway.app" --service projek-cloud-1
 ```
 
 Jika variable MySQL belum masuk ke service aplikasi, salin dari service MySQL:
@@ -683,11 +700,62 @@ Log biasanya menunjukkan error seperti:
 - Migration gagal.
 - Health check gagal.
 - Port aplikasi salah.
+- Table database belum terbentuk.
 
 Jika log deploy menampilkan banyak request ke `/health` lalu muncul `Deploy failed` atau `service unavailable`, berarti project masih memakai health check lama. Ambil update terbaru lalu deploy ulang:
 
 ```bash
 git pull
+railway up --service projek-cloud-1
+```
+
+Jika `/up` berhasil tetapi halaman `/`, `/login`, atau `/health` menampilkan `500 Server Error`, cek variable production:
+
+```bash
+railway variable list --service projek-cloud-1
+```
+
+Pastikan minimal ada:
+
+```text
+APP_NAME
+APP_ENV
+APP_DEBUG
+APP_KEY
+APP_URL
+MYSQLHOST
+MYSQLPORT
+MYSQLDATABASE
+MYSQLUSER
+MYSQLPASSWORD
+```
+
+Jika `APP_KEY` belum ada atau masih salah, buat ulang key dan set ke Railway:
+
+```bash
+docker compose run --rm --no-deps app php artisan key:generate --show
+railway variable set APP_KEY="base64:HASIL_KEY_DARI_PERINTAH_TADI" --service projek-cloud-1
+```
+
+Jika `APP_URL` belum sesuai domain Railway, set ulang:
+
+```bash
+railway variable set APP_URL="https://domain-railway-anda.up.railway.app" --service projek-cloud-1
+```
+
+Jika variable MySQL belum ada di service aplikasi, set ulang:
+
+```bash
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
+```
+
+Setelah variable diperbaiki, deploy ulang:
+
+```bash
 railway up --service projek-cloud-1
 ```
 

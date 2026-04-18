@@ -701,25 +701,27 @@ Format JSON berguna jika ingin menyalin nilai variable dengan lebih rapi.
 Set variable aplikasi Laravel:
 
 ```bash
-railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false --service projek-cloud-1
+railway variable set APP_NAME="Projek Cloud 1" --service projek-cloud-1
+railway variable set APP_ENV="production" --service projek-cloud-1
+railway variable set APP_DEBUG="false" --service projek-cloud-1
 ```
 
 Buat `APP_KEY`:
 
 ```bash
-php artisan key:generate --show
+docker compose run --rm --no-deps app php artisan key:generate --show
 ```
 
 Set `APP_KEY`:
 
 ```bash
-railway variable set APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
+railway variable set APP_KEY="base64:ISI_APP_KEY_ANDA" --service projek-cloud-1
 ```
 
 Set `APP_URL` jika sudah punya domain:
 
 ```bash
-railway variable set APP_URL=https://projek-cloud-1-production.up.railway.app --service projek-cloud-1
+railway variable set APP_URL="https://projek-cloud-1-production.up.railway.app" --service projek-cloud-1
 ```
 
 Jika variable MySQL belum tersedia di service aplikasi, set manual:
@@ -855,8 +857,12 @@ railway login
 railway init --name projek-cloud-1
 railway add --database mysql
 railway add --service projek-cloud-1
-php artisan key:generate --show
-railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
+docker compose run --rm --no-deps app php artisan key:generate --show
+railway variable set APP_NAME="Projek Cloud 1" --service projek-cloud-1
+railway variable set APP_ENV="production" --service projek-cloud-1
+railway variable set APP_DEBUG="false" --service projek-cloud-1
+railway variable set APP_KEY="base64:ISI_APP_KEY_ANDA" --service projek-cloud-1
+railway variable set APP_URL="https://domain-railway-anda.up.railway.app" --service projek-cloud-1
 railway variable list --service MySQL --json
 railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
 railway variable set MYSQLPORT="3306" --service projek-cloud-1
@@ -1076,6 +1082,7 @@ Pastikan minimal ada:
 
 ```text
 APP_KEY
+APP_URL
 APP_ENV
 APP_DEBUG
 MYSQLHOST
@@ -1083,6 +1090,30 @@ MYSQLPORT
 MYSQLDATABASE
 MYSQLUSER
 MYSQLPASSWORD
+```
+
+### Halaman 500 setelah deploy
+
+Jika `/up` berhasil tetapi `/`, `/login`, atau `/health` menampilkan `500 Server Error`, biasanya variable production belum lengkap.
+
+Cek variable aplikasi:
+
+```bash
+railway variable list --service projek-cloud-1
+```
+
+Pastikan `APP_KEY`, `APP_URL`, dan variable MySQL sudah ada. Jika perlu, set ulang:
+
+```bash
+docker compose run --rm --no-deps app php artisan key:generate --show
+railway variable set APP_KEY="base64:HASIL_KEY_DARI_PERINTAH_TADI" --service projek-cloud-1
+railway variable set APP_URL="https://domain-railway-anda.up.railway.app" --service projek-cloud-1
+railway variable set MYSQLHOST="mysql.railway.internal" --service projek-cloud-1
+railway variable set MYSQLPORT="3306" --service projek-cloud-1
+railway variable set MYSQLDATABASE="railway" --service projek-cloud-1
+railway variable set MYSQLUSER="root" --service projek-cloud-1
+railway variable set MYSQLPASSWORD="password-dari-railway" --service projek-cloud-1
+railway up --service projek-cloud-1
 ```
 
 ### Error database

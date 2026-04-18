@@ -241,13 +241,16 @@ railway add --service projek-cloud-1 --repo https://github.com/triyono777/projek
 Buat APP_KEY:
 
 ```bash
-php artisan key:generate --show
+docker compose run --rm --no-deps app php artisan key:generate --show
 ```
 
-Set variabel aplikasi:
+Set variabel aplikasi satu per satu:
 
 ```bash
-railway variable set APP_NAME="Projek Cloud 1" APP_ENV=production APP_DEBUG=false APP_KEY=base64:ISI_APP_KEY_ANDA --service projek-cloud-1
+railway variable set APP_NAME="Projek Cloud 1" --service projek-cloud-1
+railway variable set APP_ENV="production" --service projek-cloud-1
+railway variable set APP_DEBUG="false" --service projek-cloud-1
+railway variable set APP_KEY="base64:ISI_APP_KEY_ANDA" --service projek-cloud-1
 ```
 
 Pastikan service aplikasi juga memiliki variabel MySQL dari service database:
@@ -266,7 +269,7 @@ Ganti `password-dari-railway` dengan nilai asli `MYSQLPASSWORD` dari service MyS
 Jika Railway sudah memberi public domain, `docker/start.sh` akan memakai `RAILWAY_PUBLIC_DOMAIN` untuk membuat `APP_URL` otomatis. Jika ingin eksplisit:
 
 ```bash
-railway variable set APP_URL=https://domain-anda.up.railway.app --service projek-cloud-1
+railway variable set APP_URL="https://domain-anda.up.railway.app" --service projek-cloud-1
 ```
 
 ### 5.6 Deploy dari Folder Lokal
@@ -383,6 +386,18 @@ Jika terminal menampilkan `Deploy failed`, `service unavailable`, dan banyak req
 
 ```bash
 git pull
+railway up --service projek-cloud-1
+```
+
+Jika `/up` berhasil tetapi `/`, `/login`, atau `/health` masih menampilkan `500 Server Error`, cek variable production:
+
+```bash
+railway variable list --service projek-cloud-1
+```
+
+Pastikan `APP_KEY`, `APP_URL`, dan semua variable MySQL sudah tersedia. Setelah variable diperbaiki, deploy ulang:
+
+```bash
 railway up --service projek-cloud-1
 ```
 
