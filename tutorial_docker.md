@@ -921,6 +921,14 @@ Username: projek_cloud_1
 Password: secret123
 ```
 
+Contoh halaman login phpMyAdmin:
+
+![Login phpMyAdmin lokal](image_tutorial/phpymyadmin_login.png)
+
+Setelah login berhasil, pilih database `projek_cloud_1`.
+
+![Database Laravel di phpMyAdmin](image_tutorial/phpmyadmin_db.png)
+
 Catatan:
 
 - phpMyAdmin hanya untuk kebutuhan lokal.

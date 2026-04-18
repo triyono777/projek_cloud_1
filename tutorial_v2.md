@@ -265,6 +265,14 @@ Username: projek_cloud_1
 Password: secret123
 ```
 
+Contoh halaman login phpMyAdmin:
+
+![Login phpMyAdmin lokal](image_tutorial/phpymyadmin_login.png)
+
+Setelah login berhasil, pilih database `projek_cloud_1` untuk melihat tabel Laravel.
+
+![Database Laravel di phpMyAdmin](image_tutorial/phpmyadmin_db.png)
+
 Data login phpMyAdmin tersebut berasal dari `compose.yaml`:
 
 - `Server: db` berasal dari service database bernama `db` dan setting `PMA_HOST: db` pada service `phpmyadmin`.
