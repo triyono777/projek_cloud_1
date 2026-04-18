@@ -282,7 +282,11 @@ Jika sebelumnya sudah menjalankan `docker compose build app`, perintah `docker c
 
 Tampilan Docker Desktop saat container berjalan:
 
-![Docker Desktop menampilkan container Laravel dan MySQL](image_tutorial/docker_dekstop.png)
+![Docker Desktop menampilkan project container](image_tutorial/docker_dekstop_1.png)
+
+Tampilan service Laravel, MySQL, dan phpMyAdmin:
+
+![Docker Desktop menampilkan service Laravel, MySQL, dan phpMyAdmin](image_tutorial/docker_dekstop_2.png)
 
 Jika ingin menjalankan di background:
 

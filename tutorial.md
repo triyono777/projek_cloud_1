@@ -263,9 +263,15 @@ Jalankan build dan container:
 docker compose up --build
 ```
 
-Setelah perintah berjalan, Docker Desktop akan menampilkan container aplikasi dan database.
+Setelah perintah berjalan, Docker Desktop akan menampilkan container aplikasi, database, dan phpMyAdmin.
 
-![Docker Desktop menampilkan container Laravel dan MySQL](image_tutorial/docker_dekstop.png)
+Tampilan Docker Desktop bagian project/container:
+
+![Docker Desktop menampilkan project container](image_tutorial/docker_dekstop_1.png)
+
+Tampilan Docker Desktop bagian service yang berjalan:
+
+![Docker Desktop menampilkan service Laravel, MySQL, dan phpMyAdmin](image_tutorial/docker_dekstop_2.png)
 
 Jika ingin berjalan di background:
 
