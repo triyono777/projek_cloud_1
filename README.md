@@ -11,6 +11,84 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 5. Men-deploy Laravel ke Railway menggunakan Dockerfile.
 6. Menambahkan MySQL service di Railway lewat CLI.
 
+## Tutorial yang Tersedia
+
+Gunakan file tutorial sesuai kebutuhan belajar:
+
+| File | Fokus | Kapan Dipakai |
+| --- | --- | --- |
+| [tutorial_v2.md](tutorial_v2.md) | Alur utama dari `git clone`, Docker lokal, validasi lokal, lalu deploy Railway | Dipakai sebagai panduan praktik utama untuk pemula |
+| [tutorial.md](tutorial.md) | Modul lengkap Laravel, Docker, MySQL, Railway CLI, dan troubleshooting | Dipakai sebagai materi detail atau modul pembelajaran penuh |
+| [tutorial_docker.md](tutorial_docker.md) | Konsep Docker, file Docker yang dibuat, `Dockerfile`, `compose.yaml`, dan studi kasus Laravel | Dipakai saat fokus belajar Docker terlebih dahulu |
+
+Urutan belajar yang disarankan:
+
+1. Baca [tutorial_docker.md](tutorial_docker.md) untuk memahami Docker.
+2. Ikuti [tutorial_v2.md](tutorial_v2.md) untuk praktik dari clone sampai deploy.
+3. Gunakan [tutorial.md](tutorial.md) sebagai referensi lengkap saat butuh penjelasan tambahan.
+
+## Galeri Screenshot
+
+Screenshot pendukung tutorial disimpan di folder [image_tutorial](image_tutorial).
+
+### Aplikasi Laravel
+
+Halaman utama web pribadi:
+
+![Halaman utama web pribadi Laravel](image_tutorial/home_page.png)
+
+Dashboard admin manajemen blog:
+
+![Dashboard admin manajemen blog](image_tutorial/dashboard_admin.png)
+
+### Docker dan phpMyAdmin Lokal
+
+Docker Desktop menampilkan project container:
+
+![Docker Desktop menampilkan project container](image_tutorial/docker_dekstop_1.png)
+
+Docker Desktop menampilkan service Laravel, MySQL, dan phpMyAdmin:
+
+![Docker Desktop menampilkan service Laravel, MySQL, dan phpMyAdmin](image_tutorial/docker_dekstop_2.png)
+
+Login phpMyAdmin lokal:
+
+![Login phpMyAdmin lokal](image_tutorial/phpymyadmin_login.png)
+
+Database Laravel di phpMyAdmin:
+
+![Database Laravel di phpMyAdmin](image_tutorial/phpmyadmin_db.png)
+
+### Railway
+
+Halaman utama Railway:
+
+![Halaman utama Railway](image_tutorial/railway_homepage.png)
+
+Halaman login Railway:
+
+![Halaman login Railway](image_tutorial/railway_login.png)
+
+Panduan install Railway CLI:
+
+![Panduan install Railway CLI](image_tutorial/railway_install.png)
+
+Login Railway CLI di terminal:
+
+![Login Railway CLI di terminal](image_tutorial/railway_cli_login.png)
+
+Dashboard project Railway:
+
+![Dashboard project Railway](image_tutorial/rail_way_dashboard.png)
+
+Variable database MySQL Railway:
+
+![Variable database MySQL Railway](image_tutorial/railway_variabel_database.png)
+
+Lokasi domain URL Railway:
+
+![Lokasi domain URL Railway](image_tutorial/railway_lokasi_domian_url.png)
+
 ## Stack
 
 * Laravel 13
@@ -26,9 +104,11 @@ Proyek ini disiapkan agar bisa dipakai langsung untuk:
 * `Dockerfile`: image PHP untuk aplikasi Laravel
 * `compose.yaml`: stack lokal Laravel + MySQL + phpMyAdmin
 * `docker/start.sh`: startup script untuk menunggu database dan menjalankan migrasi
-* `railway.json`: konfigurasi build dan deploy Railway
+* `railway.json`: konfigurasi build dan deploy Railway; Railway memakai `/up` untuk health check platform
 * `routes/web.php`: route halaman utama dan endpoint `/health`
-* `railway.json`: Railway memakai `/up` untuk health check platform
+* `tutorial_v2.md`: tutorial utama dari clone sampai deploy
+* `tutorial.md`: tutorial lengkap Laravel, Docker, MySQL, dan Railway
+* `tutorial_docker.md`: tutorial khusus Docker untuk aplikasi Laravel
 
 ## 1. Menjalankan Proyek Secara Lokal
 
