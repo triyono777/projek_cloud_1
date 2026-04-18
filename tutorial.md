@@ -690,6 +690,10 @@ Melihat variable dalam format JSON:
 railway variable list --service MySQL --json
 ```
 
+Contoh tampilan variable database MySQL di Railway:
+
+![Variable database MySQL Railway](image_tutorial/railway_variabel_database.png)
+
 Format JSON berguna jika ingin menyalin nilai variable dengan lebih rapi.
 
 ### 13.10 Mengatur Environment Variable

@@ -608,6 +608,10 @@ Jika variable MySQL belum masuk ke service aplikasi, salin dari service MySQL:
 railway variable list --service MySQL --json
 ```
 
+Contoh tampilan variable database MySQL di Railway:
+
+![Variable database MySQL Railway](image_tutorial/railway_variabel_database.png)
+
 Set ke service aplikasi:
 
 ```bash
