@@ -50,6 +50,19 @@ Setelah service aktif, buka:
 * Health check: [http://localhost:8000/health](http://localhost:8000/health)
 * phpMyAdmin: [http://localhost:8081](http://localhost:8081)
 
+Login aplikasi:
+
+* URL: [http://localhost:8000/login](http://localhost:8000/login)
+* Email: `admin@example.com`
+* Password: `password`
+
+Login phpMyAdmin:
+
+* URL: [http://localhost:8081](http://localhost:8081)
+* Server: `db`
+* Username: `projek_cloud_1`
+* Password: `secret123`
+
 Jika ingin menjalankan di background:
 
 ```bash

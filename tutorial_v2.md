@@ -243,6 +243,34 @@ Health check: http://localhost:8000/health
 phpMyAdmin: http://localhost:8081
 ```
 
+Cara akses aplikasi:
+
+1. Buka `http://localhost:8000`.
+2. Klik menu login atau buka langsung `http://localhost:8000/login`.
+3. Login memakai akun admin default.
+
+```text
+Email: admin@example.com
+Password: password
+```
+
+Cara akses phpMyAdmin:
+
+1. Buka `http://localhost:8081`.
+2. Isi data login database lokal.
+
+```text
+Server: db
+Username: projek_cloud_1
+Password: secret123
+```
+
+Catatan:
+
+- Aplikasi Laravel memakai akun `admin@example.com`.
+- phpMyAdmin memakai username dan password database MySQL lokal.
+- Kedua akun ini berbeda fungsi.
+
 Jika sebelumnya sudah menjalankan `docker compose build app`, perintah `docker compose up --build` tetap aman dijalankan. Docker akan memakai cache build jika tidak ada perubahan besar.
 
 Tampilan Docker Desktop saat container berjalan:
